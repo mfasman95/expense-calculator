@@ -10,10 +10,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {
-          this.props.loggedIn &&
-            <MainNav />
-        }
+        <MainNav />
         <Col xs={10} xsOffset={1}>
           <Router currentPage={this.props.page} pages={Pages} />
         </Col>
@@ -24,7 +21,6 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    loggedIn: state.main.loggedIn,
     page: state.route.page,
   }
 }

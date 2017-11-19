@@ -1,23 +1,18 @@
 import extend from 'extend';
 
 // Set initial application state
-const initialState = {
-  loggedIn: false,
-};
+const initialState = {};
 
 // Handle actions dispatched to the reducer
 // Each value is a function
 const actionHandlers = {
-  LOGOUT: (returnState) => {
+  LOGOUT: () => initialState,
+  LOGIN: (returnState, action) => {
     const rs = returnState;
+    console.log(action);
 
-    rs.loggedIn = false;
-    return rs;
-  },
-  LOGIN: (returnState) => {
-    const rs = returnState;
-
-    rs.loggedIn = true;
+    rs.username = action.username;
+    rs.id = action.id;
     return rs;
   },
 };

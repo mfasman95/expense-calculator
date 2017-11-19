@@ -5,12 +5,13 @@ const path = require('path');
 const mongoose = require('mongoose');
 const express = require('express');
 const compression = require('compression');
-const favicon = require('serve-favicon');
+const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const url = require('url');
+const chalk = require('chalk');
 
 // Custom modules
 const { router } = require('./express');
@@ -35,7 +36,12 @@ const redisPASS = (process.env.REDISCLOUD_URL) ? redisURL.auth.split(':')[1] : u
 
 const app = express();
 
-app.use('/', express.static(path.resolve(__dirname, './../client/build/')));
+// Setup express logger
+if (!['production', 'test'].includes(process.env.NODE_ENV)) {
+  app.use(morgan(chalk.yellow(':method :url HTTP/:http-version :status :response-time ms')));
+}
+
+app.use(express.static(path.resolve(__dirname, './../client/build/')));
 app.disable('x-powered-by');
 app.use(cookieParser());
 app.use(compression({}));

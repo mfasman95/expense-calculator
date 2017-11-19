@@ -7,11 +7,11 @@ if (['test', 'production'].includes(process.env.NODE_ENV)) {
 
 const { log } = console;
 
-const debug = formattedMessage => {
+const debug = (formattedMessage) => {
   if (debugOn) {
     log(formattedMessage);
   }
-}
+};
 
 module.exports = {
   generic: message => debug(chalk.cyan(message)),
@@ -19,11 +19,11 @@ module.exports = {
   socketOut: message => debug(chalk.blue(`Socket Out: ${message}`)),
   warning: message => debug(chalk.bold.undeline.yellow(`WARNING: ${message}`)),
   error: message => debug(chalk.bold.undeline.red(`ERROR: ${message}`)),
-  testingDebug: (..._messages) => {
+  testingDebug: (...messages) => {
     log(chalk.bold.red('@@@@@'));
-    for (var i in _messages) {
-      log(chalk.bold.red(_messages[i]));
+    for (let i = 0; i < messages.length; i++) {
+      log(messages[i]);
       log(chalk.bold.red('~~~~~~~~~~~~~~~'));
     }
   },
-}
+};
