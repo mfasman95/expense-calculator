@@ -75,6 +75,23 @@ AccountSchema.statics.authenticate = (username, password, callback) =>
     });
   });
 
+AccountSchema.statics.changePassword = (newPass, newSalt, _id, callback) =>
+  AccountModel.findOne({ _id })
+    .select('password')
+    .exec((err, doc) => {
+      const account = doc;
+      if (err) return callback(err);
+
+      if (!account) return callback();
+
+      if (account.password === newPass) return callback();
+
+      account.password = newPass;
+      account.salt = newSalt;
+
+      return account.save().then(callback);
+    });
+
 AccountModel = mongoose.model('Account', AccountSchema);
 
 module.exports.AccountModel = AccountModel;

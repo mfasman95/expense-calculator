@@ -8,12 +8,7 @@ const initialState = {
 // Handle actions dispatched to the reducer
 // Each value is a function
 const actionHandlers = {
-  LOGOUT: (returnState) => {
-    const rs = returnState;
-
-    rs.loggedIn = false;
-    return rs;
-  },
+  LOGOUT: () => initialState,
   LOGIN: (returnState) => {
     const rs = returnState;
 

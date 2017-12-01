@@ -5,10 +5,12 @@ import { createStore, combineReducers } from 'redux';
 import main from './reducers/main.reducer';
 import route from './reducers/router.reducer';
 import session from './reducers/session.reducer';
+import expenses from './reducers/expenses.reducer';
 
 // Export the store, made of all the reducers combined
 export default createStore(combineReducers({
   main,
   route,
   session,
+  expenses,
 }));

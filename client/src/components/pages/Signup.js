@@ -1,8 +1,9 @@
+import querystring from 'querystring';
 import React from 'react';
 import { connect } from 'react-redux';
 import TextInput from './../generic/TextInput';
 import { makeApiGet } from './../../scripts/fetch';
-import { Button } from 'react-bootstrap';
+import { Button, PageHeader } from 'react-bootstrap';
 
 const { error } = console;
 
@@ -20,14 +21,27 @@ class SignUp extends React.Component {
     this.handlePass1 = this.handlePass1.bind(this);
     this.handlePass2 = this.handlePass2.bind(this);
     this.signUp = this.signUp.bind(this);
+    this.handleEnter = this.handleEnter.bind(this);
   }
 
   handleUsername(e) { this.setState({ username: e.target.value }); }
   handlePass1(e) { this.setState({ pass1: e.target.value }); }
   handlePass2(e) { this.setState({ pass2: e.target.value }); }
 
+  handleEnter(e) { if (e.key === 'Enter') this.signUp(); }
+
+  componentDidMount() {
+    document.querySelector('input').focus();
+  }
+
   signUp() {
-    makeApiGet(`signUp/?username=${this.state.username}&pass1=${this.state.pass1}&pass2=${this.state.pass2}`)
+    const query = querystring.stringify({
+      username: this.state.username,
+      pass1: this.state.pass1,
+      pass2: this.state.pass2,
+    });
+    const target = (`signUp/?${query}`);
+    makeApiGet(target)
       .then((res) => {
         res.json().then((data) => {
           if (data.error) return error(data.error);
@@ -44,8 +58,8 @@ class SignUp extends React.Component {
 
   render() {
     return (
-      <div>
-        <h1>Sign Up</h1>
+      <div onKeyUp={this.handleEnter}>
+        <PageHeader>Sign Up</PageHeader>
         <TextInput
           title='Username'
           type='text'

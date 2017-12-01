@@ -1,17 +1,34 @@
 import extend from 'extend';
 
 // Set initial application state
-const initialState = {};
+const initialState = {
+  expenses: {},
+};
 
 // Handle actions dispatched to the reducer
 // Each value is a function
 const actionHandlers = {
   LOGOUT: () => initialState,
-  LOGIN: (returnState, action) => {
+  INIT_EXPENSES: (returnState, action) => {
     const rs = returnState;
 
-    rs.username = action.username;
-    rs.id = action.id;
+    for (let i = 0; i < action.expenses.length; i++) {
+      const expense = action.expenses[i];
+
+      rs.expenses[expense._id] = expense;
+    }
+    return rs;
+  },
+  UPDATE_EXPENSE: (returnState, action) => {
+    const rs = returnState;
+
+    rs.expenses[action.expense._id] = action.expense;
+    return rs;
+  },
+  DELETE_EXPENSE: (returnState, action) => {
+    const rs = returnState;
+
+    delete rs.expenses[action.expenseId];
     return rs;
   },
 };

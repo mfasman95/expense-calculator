@@ -1,5 +1,5 @@
-const { Account } = require('./../../models');
-const { error, testingDebug } = require('./../../debug').debugging;
+const { AccountModel } = require('./../../models');
+const { error } = require('./../../debug').debugging;
 
 module.exports.logout = (req, res) => {
   req.session.destroy();
@@ -16,12 +16,12 @@ module.exports.login = (request, response) => {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  return Account.AccountModel.authenticate(username, password, (err, account) => {
+  return AccountModel.authenticate(username, password, (err, account) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Wrong username or password' });
     }
 
-    req.session.account = Account.AccountModel.toAPI(account);
+    req.session.account = AccountModel.toAPI(account);
 
     return res.json({ account: req.session.account });
   });
@@ -45,16 +45,16 @@ module.exports.signUp = (request, response) => {
     return res.status(400).json({ error: 'Passwords do not match' });
   }
 
-  return Account.AccountModel.generateHash(pass1, (salt, hash) => {
+  return AccountModel.generateHash(pass1, (salt, hash) => {
     const password = hash;
 
     // Make the new account
-    const newAccount = new Account.AccountModel({ username, salt, password });
+    const newAccount = new AccountModel({ username, salt, password });
     // Save the new account
     newAccount.save()
       // After the save, return a response
       .then(() => {
-        req.session.account = Account.AccountModel.toAPI(newAccount);
+        req.session.account = AccountModel.toAPI(newAccount);
         return res.json({ account: req.session.account });
       })
       // If an error occurs, handle it
@@ -67,5 +67,42 @@ module.exports.signUp = (request, response) => {
 
         return res.status(400).json({ error: 'An error occurred' });
       });
+  });
+};
+
+module.exports.changePassword = (request, response) => {
+  const req = request;
+  const res = response;
+
+  let { oldPass, newPass1, newPass2, id } = req.query;
+
+  oldPass = `${oldPass}`;
+  newPass1 = `${newPass1}`;
+  newPass2 = `${newPass2}`;
+  id = `${id}`;
+
+  if (!oldPass || !newPass1 || !newPass2 || !id) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  if (newPass1 === oldPass) {
+    return res.status(400).json({ error: 'Submitted old password matches submitted new password' });
+  }
+
+  if (newPass1 !== newPass2) {
+    return res.status(400).json({ error: 'Passwords do not match' });
+  }
+
+  return AccountModel.generateHash(newPass1, (salt, hash) => {
+    const password = hash;
+
+    AccountModel.changePassword(password, salt, id, (data) => {
+      if (data.err) {
+        error(data.err);
+        return res.status(400).json({ error: 'Could not change password' });
+      }
+
+      return res.json({});
+    });
   });
 };

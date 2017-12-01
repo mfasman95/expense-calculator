@@ -13,14 +13,8 @@ class MainNav extends React.Component {
   }
 
   logout() {
-    makeApiGet(`logout`)
-      .then((res) => {
-        res.json()
-          .then((data) => {
-            this.props.dispatch({ type: 'LOGOUT' });
-            this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Login' });
-          });
-      })
+    makeApiGet(`logout/?`)
+      .then((res) => res.json().then(() => this.props.dispatch({ type: 'LOGOUT' })))
       .catch(err => error(err));
   }
 
@@ -36,21 +30,39 @@ class MainNav extends React.Component {
           <FormGroup>
             <ButtonGroup>
               {
+                this.props.loggedIn && this.props.page !== 'Settings' &&
+                  <Button bsStyle='primary' onClick={() => this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Settings' })}>
+                    <i className='fa fa-cog' />
+                  </Button>
+              }
+              {
+                this.props.loggedIn && this.props.page !== 'Home' &&
+                  <Button bsStyle='primary' onClick={() => this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Home' })}>
+                    <i className='fa fa-home' />
+                  </Button>
+              }
+              {
+                this.props.loggedIn && this.props.page !== 'Premium' &&
+                  <Button bsStyle='success' onClick={() => this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Premium' })}>
+                    <i className='fa fa-dollar' />
+                  </Button>
+              }
+              {
                 this.props.loggedIn && 
                   <Button bsStyle='danger' onClick={this.logout}>
-                    Logout
+                    <i className='fa fa-sign-out' />
                   </Button>
               }
               {
-                !this.props.loggedIn && this.props.page === 'Login' &&
+                !this.props.loggedIn && this.props.page !== 'Signup' &&
                   <Button bsStyle='primary' onClick={() => this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Signup' })}>
-                    Signup
+                    <i className='fa fa-user-plus' />
                   </Button>
               }
               {
-                !this.props.loggedIn && this.props.page === 'Signup' &&
+                !this.props.loggedIn && this.props.page !== 'Login' &&
                   <Button bsStyle='primary' onClick={() => this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Login' })}>
-                    Login
+                    <i className='fa fa-sign-in' />
                   </Button>  
               }
             </ButtonGroup>

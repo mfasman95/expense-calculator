@@ -61,7 +61,6 @@ app.use(session({
   },
 }));
 
-
 // Pass the app object over to our custom express router
 router(app);
 

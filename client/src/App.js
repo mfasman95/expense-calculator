@@ -11,7 +11,7 @@ class App extends Component {
     return (
       <div className="App">
         <MainNav />
-        <Col xs={10} xsOffset={1}>
+        <Col xs={12}>
           <Router currentPage={this.props.page} pages={Pages} />
         </Col>
       </div>

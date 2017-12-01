@@ -1,8 +1,9 @@
+import querystring from 'querystring';
 import React from 'react';
 import { connect } from 'react-redux';
 import TextInput from './../generic/TextInput';
 import { makeApiGet } from './../../scripts/fetch';
-import { Button } from 'react-bootstrap';
+import { Button, PageHeader } from 'react-bootstrap';
 
 const { error } = console;
 
@@ -18,13 +19,21 @@ class Login extends React.Component {
     this.handleUsername = this.handleUsername.bind(this);
     this.handlePassword = this.handlePassword.bind(this);
     this.login = this.login.bind(this);
+    this.handleEnter = this.handleEnter.bind(this);
   }
 
   handleUsername(e) { this.setState({ username: e.target.value }); }
   handlePassword(e) { this.setState({ password: e.target.value }); }
 
+  handleEnter(e) { if (e.key === 'Enter') this.login(); }
+
   login() {
-    makeApiGet(`login/?username=${this.state.username}&password=${this.state.password}`)
+    const query = querystring.stringify({
+      username: this.state.username,
+      password: this.state.password,
+    });
+    const target = (`login/?${query}`);
+    makeApiGet(target)
       .then((res) => {
         res.json().then((data) => {
           if (data.error) return error(data.error);
@@ -39,10 +48,14 @@ class Login extends React.Component {
       .catch(err => error(err));
   }
 
+  componentDidMount() {
+    document.querySelector('input').focus();
+  }
+
   render() {
     return (
-      <div>
-        <h1>Login</h1>
+      <div onKeyUp={this.handleEnter}>
+        <PageHeader>Login</PageHeader>
         <TextInput
           title='Username'
           type='text'

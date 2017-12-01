@@ -1,6 +1,23 @@
+/* eslint-disable no-undef */
+
+import store from './../store';
+
 // This function, and all functions composed from it, return a promise
 // Handle a successful request with .then, and a failed request with .catch
-const makeApiRequest = reqObj => reqPath => fetch(reqPath, reqObj);
+const makeApiRequest = reqObj => (requestPath) => {
+  let reqPath = requestPath;
+
+  // Get the session id from the redux store
+  const { id } = store.getState().session;
+
+  // Handle if id is the only parameter being sent
+  if (reqPath[reqPath.length - 1] !== '?') {
+    // If id is not the only parameter, add an & to the reqPath
+    reqPath = `${reqPath}&`;
+  }
+
+  return fetch(`${reqPath}id=${id}`, reqObj);
+};
 
 // A precomposed API request function, setup to make get requests
 export const makeApiGet = makeApiRequest({
@@ -17,14 +34,3 @@ export const makeApiPost = makeApiRequest({
   mode: 'cors',
   cache: 'default',
 });
-
-/*
-// Example of how to use get/post
-mapApiPost('URL')
-  .then(() => {
-    // Handle response
-  })
-  .catch(() => {
-    // Handle error
-  })
-*/

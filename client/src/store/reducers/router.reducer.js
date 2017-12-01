@@ -7,6 +7,7 @@ const initialState = {
 
 // Handle actions dispatched to the reducer
 const actionHandlers = {
+  LOGOUT: () => initialState,
   CHANGE_PAGE: (returnState, action) => {
     const rs = returnState;
 
