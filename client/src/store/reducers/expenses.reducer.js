@@ -3,6 +3,7 @@ import extend from 'extend';
 // Set initial application state
 const initialState = {
   expenses: {},
+  budget: 0,
 };
 
 // Handle actions dispatched to the reducer
@@ -29,6 +30,12 @@ const actionHandlers = {
     const rs = returnState;
 
     delete rs.expenses[action.expenseId];
+    return rs;
+  },
+  UPDATE_BUDGET: (returnState, action) => {
+    const rs = returnState;
+
+    rs.budget = action.budget;
     return rs;
   },
 };

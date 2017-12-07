@@ -12,13 +12,13 @@ const Expense = connect()((props) => (
         bsStyle='danger'
         onClick={() => {
           makeApiGet(`deleteExpense/?expenseId=${props.expense._id}`)
-            .then((res) => {
-              res.json().then((data) => {
-                if (data.error) return error(data.error);
-                props.dispatch({
-                  type: 'DELETE_EXPENSE',
-                  expenseId: data.expenseId,
-                });
+            .then(res => res.json())
+            .then((data) => {
+              if (data.error) throw data.error;
+              
+              props.dispatch({
+                type: 'DELETE_EXPENSE',
+                expenseId: data.expenseId,
               });
             })
             .catch(err => error(err));
@@ -36,13 +36,13 @@ const Expense = connect()((props) => (
 class ExpensesDisplay extends React.Component {
   componentDidMount() {
     makeApiGet(`expenses/?`)
-      .then((res) => {
-        res.json().then((data) => {
-          if (data.error) return error(data.error);
-          this.props.dispatch({
-            type: 'INIT_EXPENSES',
-            expenses: data.expenses,
-          });
+      .then(res => res.json())
+      .then((data) => {
+        if (data.error) throw data.error;
+
+        this.props.dispatch({
+          type: 'INIT_EXPENSES',
+          expenses: data.expenses,
         });
       })
       .catch(err => error(err));

@@ -24,6 +24,14 @@ const AccountSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  hasPremium: {
+    type: Boolean,
+    default: false,
+  },
+  budget: {
+    type: Number,
+    min: 0,
+  },
   createdDate: {
     type: Date,
     default: Date.now,
@@ -33,6 +41,7 @@ const AccountSchema = new mongoose.Schema({
 AccountSchema.statics.toAPI = doc => ({
   // _id is built into your mongo document and is guaranteed to be unique
   username: doc.username,
+  hasPremium: doc.hasPremium,
   _id: doc._id,
 });
 
@@ -89,6 +98,35 @@ AccountSchema.statics.changePassword = (newPass, newSalt, _id, callback) =>
       account.password = newPass;
       account.salt = newSalt;
 
+      return account.save().then(callback);
+    });
+
+AccountSchema.statics.updatePremium = (hasPremium, _id, callback) =>
+  AccountModel.findOne({ _id })
+    .select('hasPremium')
+    .exec((err, doc) => {
+      const account = doc;
+
+      if (err) return callback(err);
+
+      if (!account) return callback();
+
+      account.hasPremium = hasPremium;
+
+      return account.save().then(callback);
+    });
+
+AccountSchema.statics.setBudget = (budget, _id, callback) =>
+  AccountModel.findOne({ _id })
+    .select('budget')
+    .exec((err, doc) => {
+      const account = doc;
+
+      if (err) return callback(err);
+
+      if (!account) return callback();
+
+      account.budget = budget;
       return account.save().then(callback);
     });
 

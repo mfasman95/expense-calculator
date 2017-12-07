@@ -40,6 +40,7 @@ class Login extends React.Component {
           this.props.dispatch({
             type: 'LOGIN',
             username: data.account.username,
+            hasPremium: data.account.hasPremium,
             id: data.account._id,
           });
           this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Home' });

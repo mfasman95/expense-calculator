@@ -9,4 +9,7 @@ module.exports = (app) => {
   app.get('/newExpense', mid.requiresSecure, controllers.Expense.makeExpense);
   app.get('/deleteExpense', mid.requiresSecure, controllers.Expense.deleteExpense);
   app.get('/expenses', mid.requiresSecure, controllers.Expense.getExpenses);
+  app.get('/updatePremium', mid.requiresSecure, controllers.Account.updatePremium);
+  app.get('/getBudget', mid.requiresSecure, controllers.Account.getBudget);
+  app.get('/setBudget', mid.requiresSecure, controllers.Account.setBudget);
 };

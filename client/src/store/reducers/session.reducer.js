@@ -1,7 +1,9 @@
 import extend from 'extend';
 
 // Set initial application state
-const initialState = {};
+const initialState = {
+  hasPremium: false,
+};
 
 // Handle actions dispatched to the reducer
 // Each value is a function
@@ -10,8 +12,15 @@ const actionHandlers = {
   LOGIN: (returnState, action) => {
     const rs = returnState;
 
+    rs.hasPremium = action.hasPremium;
     rs.username = action.username;
     rs.id = action.id;
+    return rs;
+  },
+  UPDATE_PREMIUM: (returnState, action) => {
+    const rs = returnState;
+
+    rs.hasPremium = action.hasPremium;
     return rs;
   },
 };

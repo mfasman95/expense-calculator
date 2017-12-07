@@ -106,3 +106,61 @@ module.exports.changePassword = (request, response) => {
     });
   });
 };
+
+module.exports.updatePremium = (request, response) => {
+  const req = request;
+  const res = response;
+
+  const { id, hasPremium } = req.query;
+
+  const userId = `${id}`;
+  // This will default to false if it is anything other than true
+  // No need to check parameter if it will always be a value we care about
+  const premiumState = (`${hasPremium}` === 'true');
+
+  return AccountModel.updatePremium(premiumState, userId, (result) => {
+    if (result.err || !result) {
+      return res.status(500).json({ error: 'Unknown server error when unlocking premium' });
+    }
+
+    return res.json({ hasPremium: result.hasPremium });
+  });
+};
+
+module.exports.setBudget = (request, response) => {
+  const req = request;
+  const res = response;
+
+  const { id, budget } = req.query;
+
+  if (!budget) return res.status(400).json({ error: 'Missing parameter: Budget' });
+
+  const userId = `${id}`;
+  const newBudget = Math.round(parseFloat(budget));
+
+  return AccountModel.setBudget(newBudget, userId, (result) => {
+    if (result.err || !result) {
+      return res.status(500).json({ error: 'Unknown server error when setting budget' });
+    }
+
+    return res.json({ budget: result.budget });
+  });
+};
+
+module.exports.getBudget = (request, response) => {
+  const req = request;
+  const res = response;
+
+  const { id } = req.query;
+
+  const userId = `${id}`;
+
+  return AccountModel.findOne({ _id: userId })
+    .select('budget')
+    .then((result) => {
+      if (result.err) throw result.err;
+
+      res.json({ budget: result.budget });
+    })
+    .catch(err => res.status(500).json({ error: err }));
+};

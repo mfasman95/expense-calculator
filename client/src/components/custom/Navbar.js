@@ -5,17 +5,36 @@ import { makeApiGet } from './../../scripts/fetch'
 
 const { error } = console;
 
+const NavIconButton = (props) => (
+  <Button
+    bsStyle={props.bsStyle}
+    disabled={props.disabled || false}
+    onClick={props.onClick}
+  >
+    <i className={`fa fa-${props.icon}`}/>
+  </Button>
+);
+
 class MainNav extends React.Component {
   constructor(props) {
     super(props);
 
     this.logout = this.logout.bind(this);
+    this.changePage = this.changePage.bind(this);
   }
 
   logout() {
     makeApiGet(`logout/?`)
-      .then((res) => res.json().then(() => this.props.dispatch({ type: 'LOGOUT' })))
+      .then((res) => res.json())
+      .then(() => this.props.dispatch({ type: 'LOGOUT' }))
       .catch(err => error(err));
+  }
+
+  changePage(page) {
+    this.props.dispatch({
+      type: 'CHANGE_PAGE',
+      page,
+    });
   }
 
   render() {
@@ -30,40 +49,55 @@ class MainNav extends React.Component {
           <FormGroup>
             <ButtonGroup>
               {
-                this.props.loggedIn && this.props.page !== 'Settings' &&
-                  <Button bsStyle='primary' onClick={() => this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Settings' })}>
-                    <i className='fa fa-cog' />
-                  </Button>
+                this.props.loggedIn &&
+                  <NavIconButton
+                    bsStyle='primary'
+                    disabled={this.props.page === 'Home'}
+                    onClick={() => this.changePage('Home')}
+                    icon='home'
+                  />
               }
               {
-                this.props.loggedIn && this.props.page !== 'Home' &&
-                  <Button bsStyle='primary' onClick={() => this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Home' })}>
-                    <i className='fa fa-home' />
-                  </Button>
+                this.props.loggedIn &&
+                  <NavIconButton
+                    bsStyle='primary'
+                    disabled={this.props.page === 'Settings'}
+                    onClick={() => this.changePage('Settings')}
+                    icon='cog'
+                  />
               }
               {
-                this.props.loggedIn && this.props.page !== 'Premium' &&
-                  <Button bsStyle='success' onClick={() => this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Premium' })}>
-                    <i className='fa fa-dollar' />
-                  </Button>
+                this.props.loggedIn &&
+                  <NavIconButton
+                    bsStyle='success'
+                    disabled={this.props.page === 'Premium'}
+                    onClick={() => this.changePage('Premium')}
+                    icon='dollar'
+                  />
               }
               {
                 this.props.loggedIn && 
-                  <Button bsStyle='danger' onClick={this.logout}>
-                    <i className='fa fa-sign-out' />
-                  </Button>
+                  <NavIconButton
+                    bsStyle='danger'
+                    onClick={this.logout}
+                    icon='sign-out'
+                  />
               }
               {
                 !this.props.loggedIn && this.props.page !== 'Signup' &&
-                  <Button bsStyle='primary' onClick={() => this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Signup' })}>
-                    <i className='fa fa-user-plus' />
-                  </Button>
+                  <NavIconButton
+                    bsStyle='primary'
+                    onClick={() => this.changePage('Signup')}
+                    icon='user-plus'
+                  />
               }
               {
                 !this.props.loggedIn && this.props.page !== 'Login' &&
-                  <Button bsStyle='primary' onClick={() => this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Login' })}>
-                    <i className='fa fa-sign-in' />
-                  </Button>  
+                  <NavIconButton
+                    bsStyle='primary'
+                    onClick={() => this.changePage('Login')}
+                    icon='sign-in'
+                  /> 
               }
             </ButtonGroup>
           </FormGroup>
