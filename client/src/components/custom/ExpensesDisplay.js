@@ -29,7 +29,7 @@ const Expense = connect()((props) => (
       </Button>
     </td>
     <td>{props.expense.name}</td>
-    <td>${props.expense.costPerMonth}/Month</td>
+    <td>${props.expense[props.durationView].toFixed(2)}</td>
   </tr>
 ));
 
@@ -48,19 +48,18 @@ class ExpensesDisplay extends React.Component {
       .catch(err => error(err));
   }
   render() {
-    const expenseKeys = Object.keys(this.props.expenses);
     let totalExpenses = 0;
     const expenses = [];
+    const expenseKeys = Object.keys(this.props.expenses);
     for (let i = 0; i < expenseKeys.length; i++) {
       const expense = this.props.expenses[expenseKeys[i]];
-
-      totalExpenses += expense.costPerMonth;
-      expenses.push(<Expense key={i} expense={expense} />);
+      totalExpenses += expense[this.props.durationView];
+      expenses.push(<Expense key={i} expense={expense} durationView={this.props.durationView} />);
     }
     
     return (
       <Panel>
-        { (totalExpenses >  0) && <h3 className='text-success'><b>You're Spending ${totalExpenses}/Month</b></h3> }
+        { (totalExpenses >  0) && <h3 className='text-success'><b>You're Spending ${totalExpenses.toFixed(2)} {(this.props.durationView.charAt(0).toUpperCase() + this.props.durationView.slice(1))}</b></h3> }
         {
           (expenseKeys.length <= 0) ?
             // Handle no expenses
@@ -87,6 +86,7 @@ class ExpensesDisplay extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     expenses: state.expenses.expenses,
+    durationView: state.expenses.durationView,
   }
 }
 

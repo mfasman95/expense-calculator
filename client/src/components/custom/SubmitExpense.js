@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Panel, Button } from 'react-bootstrap';
 import TextInput from './../generic/TextInput';
+import RadioControl from './../generic/RadioControl';
 import { makeApiGet } from '../../scripts/fetch';
 
 const { error } = console;
@@ -14,19 +15,23 @@ class SubmitExpense extends React.Component {
     this.state = {
       expenseName: '',
       expenseAmount: '',
+      duration: 'monthly',
     }
 
     this.handleExpenseName = this.handleExpenseName.bind(this);
     this.handleExpenseAmount = this.handleExpenseAmount.bind(this);
+    this.handleDuration = this.handleDuration.bind(this);
     this.submitExpense = this.submitExpense.bind(this);
   }
 
   handleExpenseName(e) { this.setState({ expenseName: e.target.value }); }
   handleExpenseAmount(e) { this.setState({ expenseAmount: e.target.value }); }
+  handleDuration(duration) { this.setState({ duration }); }
   submitExpense() {
     const query = querystring.stringify({
       name: this.state.expenseName,
       cost: this.state.expenseAmount,
+      duration: this.state.duration,
     });
     const target = (`newExpense/?${query}`);
     makeApiGet(target)
@@ -57,11 +62,18 @@ class SubmitExpense extends React.Component {
         />
         <br/>
         <TextInput
-          title='Amount ($/Month)'
+          title='Amount'
           type='number'
-          placeholder='$/Month'
+          placeholder='$/Duration'
           value={this.state.expenseAmount}
           updateValue={this.handleExpenseAmount}
+        />
+        <br/>
+        <RadioControl
+          name='DurationToggleBudget'
+          value={this.state.duration}
+          onChange={this.handleDuration}
+          options={['daily', 'weekly', 'monthly', 'yearly']}
         />
         <hr/>
         <Button

@@ -14,7 +14,12 @@ class BudgetDisplay extends React.Component {
 
         this.props.dispatch({
           type: 'UPDATE_BUDGET',
-          budget: data.budget || 0,
+          budget: data.budget || {
+            daily: 0,
+            weekly: 0,
+            monthly: 0,
+            yearly: 0,
+          },
         });
       })
       .catch(err => error(err));
@@ -23,9 +28,11 @@ class BudgetDisplay extends React.Component {
     const expenseKeys = Object.keys(this.props.expenses);
     let totalExpenses = 0;
     for (let i = 0; i < expenseKeys.length; i++) {
-      totalExpenses += this.props.expenses[expenseKeys[i]].costPerMonth;
+      const expense = this.props.expenses[expenseKeys[i]];
+      totalExpenses += expense[this.props.durationView];
     }
-    
+    const budget = this.props.budget[this.props.durationView];
+
     return (
       <Panel>
         <Table striped bordered condensed hover responsive>
@@ -38,15 +45,15 @@ class BudgetDisplay extends React.Component {
           <tbody>
             <tr>
               <td>Budget</td>
-              <td>${this.props.budget}/month</td>
+              <td>${budget.toFixed(2)}/month</td>
             </tr>
             <tr>
               <td>Expenses</td>
-              <td>${totalExpenses}/month</td>
+              <td>${totalExpenses.toFixed(2)}/month</td>
             </tr>
-            <tr className={(this.props.budget - totalExpenses >= 0) ? 'success' : 'danger'}>
+            <tr className={(budget - totalExpenses >= 0) ? 'success' : 'danger'}>
               <td>Remaining</td>
-              <td>${this.props.budget - totalExpenses}/month</td>
+              <td>${(budget - totalExpenses).toFixed(2)}/month</td>
             </tr>
           </tbody>
         </Table>
@@ -59,6 +66,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     expenses: state.expenses.expenses,
     budget: state.expenses.budget,
+    durationView: state.expenses.durationView,
   }
 }
 

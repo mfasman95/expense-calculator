@@ -3,7 +3,13 @@ import extend from 'extend';
 // Set initial application state
 const initialState = {
   expenses: {},
-  budget: 0,
+  budget: {
+    daily: 0,
+    weekly: 0,
+    monthly: 0,
+    yearly: 0,
+  },
+  durationView: 'monthly',
 };
 
 // Handle actions dispatched to the reducer
@@ -13,10 +19,10 @@ const actionHandlers = {
   INIT_EXPENSES: (returnState, action) => {
     const rs = returnState;
 
-    for (let i = 0; i < action.expenses.length; i++) {
-      const expense = action.expenses[i];
-
-      rs.expenses[expense._id] = expense;
+    const expenseKeys = Object.keys(action.expenses);
+    for (let i = 0; i < expenseKeys.length; i++) {
+      const expense = action.expenses[expenseKeys[i]];
+      rs.expenses[expenseKeys[i]] = expense;
     }
     return rs;
   },
@@ -36,6 +42,12 @@ const actionHandlers = {
     const rs = returnState;
 
     rs.budget = action.budget;
+    return rs;
+  },
+  SET_DURATION_VIEW: (returnState, action) => {
+    const rs = returnState;
+
+    rs.durationView = action.durationView;
     return rs;
   },
 };

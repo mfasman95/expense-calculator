@@ -1,5 +1,6 @@
 const { AccountModel } = require('./../../models');
 const { error } = require('./../../debug').debugging;
+const { MoneyDuration } = require('./../../classes');
 
 module.exports.logout = (req, res) => {
   req.session.destroy();
@@ -131,19 +132,20 @@ module.exports.setBudget = (request, response) => {
   const req = request;
   const res = response;
 
-  const { id, budget } = req.query;
+  const { id, budget, duration } = req.query;
 
-  if (!budget) return res.status(400).json({ error: 'Missing parameter: Budget' });
+  if (!budget || !duration || !id) return res.status(400).json({ error: 'All fields are required' });
 
   const userId = `${id}`;
-  const newBudget = Math.round(parseFloat(budget));
+  const moneyDuration = new MoneyDuration(budget, duration);
+  const newBudget = moneyDuration.daily;
 
   return AccountModel.setBudget(newBudget, userId, (result) => {
     if (result.err || !result) {
       return res.status(500).json({ error: 'Unknown server error when setting budget' });
     }
 
-    return res.json({ budget: result.budget });
+    return res.json({ budget: new MoneyDuration(result.budget, 'daily') });
   });
 };
 
@@ -160,7 +162,7 @@ module.exports.getBudget = (request, response) => {
     .then((result) => {
       if (result.err) throw result.err;
 
-      res.json({ budget: result.budget });
+      res.json({ budget: new MoneyDuration(result.budget || 0, 'daily') });
     })
     .catch(err => res.status(500).json({ error: err }));
 };

@@ -17,7 +17,7 @@ const ExpenseSchema = new mongoose.Schema({
     trim: true,
     set: setName,
   },
-  costPerMonth: {
+  costPerDay: {
     type: Number,
     min: 0,
     required: true,
@@ -35,7 +35,7 @@ const ExpenseSchema = new mongoose.Schema({
 
 ExpenseSchema.statics.findByOwner = ownerId =>
   ExpenseModel.find({ owner: convertId(ownerId) })
-    .select('name costPerMonth');
+    .select('name costPerDay');
 
 ExpenseModel = mongoose.model('Expense', ExpenseSchema);
 

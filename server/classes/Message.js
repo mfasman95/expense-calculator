@@ -3,4 +3,4 @@ module.exports = class Message {
     this.event = event;
     this.data = data || {};
   }
-}
+};
