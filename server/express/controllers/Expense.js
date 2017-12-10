@@ -1,5 +1,5 @@
 const { ExpenseModel } = require('./../../models');
-const { error, testingDebug } = require('./../../debug').debugging;
+const { error } = require('./../../debug').debugging;
 const { MoneyDuration } = require('./../../classes');
 
 module.exports.makeExpense = (request, response) => {
@@ -18,12 +18,19 @@ module.exports.makeExpense = (request, response) => {
   const costPerDay = moneyDuration.daily;
 
   return new ExpenseModel({ name, costPerDay, owner }).save()
-    .then(result => res.json({
-      expense: {
-        name: result.name,
-        expense: new MoneyDuration(result.costPerDay, 'daily'),
-      },
-    }))
+    .then((result) => {
+      const expenseMoneyDuration = new MoneyDuration(result.costPerDay);
+
+      const expense = {};
+      expense._id = `${result._id}`;
+      expense.name = `${result.name}`;
+      expense.daily = expenseMoneyDuration.getDaily;
+      expense.weekly = expenseMoneyDuration.getWeekly;
+      expense.monthly = expenseMoneyDuration.getMonthly;
+      expense.yearly = expenseMoneyDuration.getYearly;
+
+      return res.json({ expense });
+    })
     .catch((err) => {
       error(err);
       res.status(400).json({ error: 'An error occurred when creating a new expense' });

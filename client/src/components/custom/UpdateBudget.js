@@ -13,7 +13,7 @@ class UpdateBudget extends React.Component {
     super(props);
 
     this.state = {
-      budgetAmount: '',
+      budgetAmount: 0,
       duration: 'monthly',
     }
 
@@ -41,6 +41,8 @@ class UpdateBudget extends React.Component {
         });
       })
       .catch(err => error(err));
+
+    this.setState({ budgetAmount: 0 })
   }
 
   render() {

@@ -22,7 +22,7 @@ const actionHandlers = {
     const expenseKeys = Object.keys(action.expenses);
     for (let i = 0; i < expenseKeys.length; i++) {
       const expense = action.expenses[expenseKeys[i]];
-      rs.expenses[expenseKeys[i]] = expense;
+      rs.expenses[expense._id] = expense;
     }
     return rs;
   },

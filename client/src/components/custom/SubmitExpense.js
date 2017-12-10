@@ -13,7 +13,7 @@ class SubmitExpense extends React.Component {
 
     this.state = {
       expenseName: '',
-      expenseAmount: '',
+      expenseAmount: 0,
       duration: 'monthly',
     }
 
@@ -44,6 +44,8 @@ class SubmitExpense extends React.Component {
         });
       })
       .catch(err => this.context.notify('newExpenseError', err));
+    
+    this.setState({ expenseName: '', expenseAmount: 0 });
   }
 
   render() {

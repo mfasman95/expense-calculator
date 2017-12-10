@@ -99,8 +99,14 @@ class Settings extends React.Component {
     const target = (`changePassword/?${query}`);
     makeApiGet(target)
       .then(res => res.json())
-      .then((data) => { if (data.error) throw data.error })
+      .then((data) => {
+        if (data.error) throw data.error;
+
+        this.context.notify('changePasswordSuccess', 'You have succesfully changed your password');
+      })
       .catch(err => this.context.notify('changePasswordError', err));
+
+    this.setState({ oldPass: '', newPass1: '', newPass2: '' });
   }
 
   render() {
