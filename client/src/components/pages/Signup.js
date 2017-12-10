@@ -1,11 +1,10 @@
 import querystring from 'querystring';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextInput from './../generic/TextInput';
 import { makeApiGet } from './../../scripts/fetch';
 import { Button, PageHeader } from 'react-bootstrap';
-
-const { error } = console;
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -42,18 +41,18 @@ class SignUp extends React.Component {
     });
     const target = (`signUp/?${query}`);
     makeApiGet(target)
-      .then((res) => {
-        res.json().then((data) => {
-          if (data.error) return error(data.error);
-          this.props.dispatch({
-            type: 'LOGIN',
-            username: data.account.username,
-            id: data.account._id,
-          });
-          this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Home' });
+      .then(res => res.json())
+      .then((data) => {
+        if (data.error) throw data.error;
+
+        this.props.dispatch({
+          type: 'LOGIN',
+          username: data.account.username,
+          id: data.account._id,
         });
+        this.props.dispatch({ type: 'CHANGE_PAGE', page: 'Home' });
       })
-      .catch(err => error(err));
+      .catch(err => this.context.notify('signUpError', err));
   }
 
   render() {
@@ -108,6 +107,10 @@ class SignUp extends React.Component {
       </div>
     );
   }
+}
+
+SignUp.contextTypes = {
+  notify: PropTypes.func,
 }
 
 export default connect()(SignUp);

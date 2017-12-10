@@ -1,5 +1,5 @@
 const { AccountModel } = require('./../../models');
-const { error } = require('./../../debug').debugging;
+const { error, testingDebug } = require('./../../debug').debugging;
 const { MoneyDuration } = require('./../../classes');
 
 module.exports.logout = (req, res) => {
@@ -21,6 +21,7 @@ module.exports.login = (request, response) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Wrong username or password' });
     }
+    testingDebug(account, AccountModel.toAPI(account));
 
     req.session.account = AccountModel.toAPI(account);
 

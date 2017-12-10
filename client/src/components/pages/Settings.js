@@ -1,11 +1,10 @@
 import querystring from 'querystring';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageHeader, Panel, Accordion, Button } from 'react-bootstrap';
 import TextInput from './../generic/TextInput';
 import { makeApiGet } from './../../scripts/fetch';
-
-const { error } = console;
 
 const ChangePasswordTab = (props) => (
   <Panel 
@@ -101,7 +100,7 @@ class Settings extends React.Component {
     makeApiGet(target)
       .then(res => res.json())
       .then((data) => { if (data.error) throw data.error })
-      .catch(err => error(err));
+      .catch(err => this.context.notify('changePasswordError', err));
   }
 
   render() {
@@ -124,6 +123,10 @@ class Settings extends React.Component {
       </div>
     );
   }
+}
+
+Settings.contextTypes = {
+  notify: PropTypes.func,
 }
 
 export default connect()(Settings);

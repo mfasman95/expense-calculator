@@ -1,5 +1,6 @@
 // Import core redux functionality
 import { createStore, combineReducers } from 'redux';
+import { snackbarReducer } from 'react-redux-snackbar';
 
 // Import reducers
 import main from './reducers/main.reducer';
@@ -13,4 +14,5 @@ export default createStore(combineReducers({
   route,
   session,
   expenses,
+  snackbar: snackbarReducer,
 }));

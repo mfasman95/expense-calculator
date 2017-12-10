@@ -1,9 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageHeader, Button } from 'react-bootstrap';
 import { makeApiGet } from './../../scripts/fetch';
-
-const { error } = console;
 
 class Premium extends React.Component {
   constructor(props) {
@@ -23,7 +22,7 @@ class Premium extends React.Component {
           hasPremium: data.hasPremium,
         });
       })
-      .catch(err => error(err));
+      .catch(err => this.context.notify('updatePremiumError', err));
   }
 
   render() {
@@ -52,6 +51,10 @@ class Premium extends React.Component {
       </div>
     );
   }
+}
+
+Premium.contextTypes = {
+  notify: PropTypes.func,
 }
 
 const mapStateToProps = (state, ownProps) => {

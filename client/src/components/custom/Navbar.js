@@ -1,9 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Navbar, ButtonGroup, Button, FormGroup } from 'react-bootstrap';
 import { makeApiGet } from './../../scripts/fetch'
-
-const { error } = console;
 
 const NavIconButton = (props) => (
   <Button
@@ -27,7 +26,7 @@ class MainNav extends React.Component {
     makeApiGet(`logout/?`)
       .then((res) => res.json())
       .then(() => this.props.dispatch({ type: 'LOGOUT' }))
-      .catch(err => error(err));
+      .catch(err => this.context.notify('logoutError', err));
   }
 
   changePage(page) {
@@ -105,6 +104,10 @@ class MainNav extends React.Component {
       </Navbar>
     );
   }
+}
+
+MainNav.contextTypes = {
+  notify: PropTypes.func,
 }
 
 //Function to map the redux state to object properties

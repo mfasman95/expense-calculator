@@ -1,12 +1,11 @@
 import querystring from 'querystring';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Panel, Button } from 'react-bootstrap';
 import TextInput from './../generic/TextInput';
 import RadioControl from './../generic/RadioControl';
 import { makeApiGet } from '../../scripts/fetch';
-
-const { error } = console;
 
 class SubmitExpense extends React.Component {
   constructor(props) {
@@ -37,14 +36,14 @@ class SubmitExpense extends React.Component {
     makeApiGet(target)
       .then(res => res.json())
       .then((data) => {
-        if (data.error) return error(data.error);
+        if (data.error) throw data.error;
         
         this.props.dispatch({
           type: 'UPDATE_EXPENSE',
           expense: data.expense,
         });
       })
-      .catch(err => error(err));
+      .catch(err => this.context.notify('newExpenseError', err));
   }
 
   render() {
@@ -80,11 +79,15 @@ class SubmitExpense extends React.Component {
           bsStyle='primary'
           onClick={this.submitExpense}
         >
-        Submit Expense
+          Submit Expense
         </Button>
       </Panel>
     );
   }
+}
+
+SubmitExpense.contextTypes = {
+  notify: PropTypes.func,
 }
 
 export default connect()(SubmitExpense);

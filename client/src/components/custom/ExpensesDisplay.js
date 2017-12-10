@@ -1,9 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Panel, Table, Button } from 'react-bootstrap';
 import { makeApiGet } from './../../scripts/fetch';
-
-const { error } = console;
 
 const Expense = connect()((props) => (
   <tr>
@@ -21,7 +20,7 @@ const Expense = connect()((props) => (
                 expenseId: data.expenseId,
               });
             })
-            .catch(err => error(err));
+            .catch(err => this.context.notify('deleteExpenseError', err));
           }
         }
       >
@@ -45,7 +44,7 @@ class ExpensesDisplay extends React.Component {
           expenses: data.expenses,
         });
       })
-      .catch(err => error(err));
+      .catch(err => this.context.notify('getExpensesError', err));
   }
   render() {
     let totalExpenses = 0;
@@ -81,6 +80,10 @@ class ExpensesDisplay extends React.Component {
       </Panel>
     );
   }
+}
+
+ExpensesDisplay.contextTypes = {
+  notify: PropTypes.func,
 }
 
 const mapStateToProps = (state, ownProps) => {

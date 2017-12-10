@@ -1,9 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Panel, Table } from 'react-bootstrap';
 import { makeApiGet } from './../../scripts/fetch';
-
-const { error } = console;
 
 class BudgetDisplay extends React.Component {
   componentDidMount() {
@@ -22,7 +21,7 @@ class BudgetDisplay extends React.Component {
           },
         });
       })
-      .catch(err => error(err));
+      .catch(err => this.context.notify('getBudgetError', err));
   }
   render() {
     const expenseKeys = Object.keys(this.props.expenses);
@@ -60,6 +59,10 @@ class BudgetDisplay extends React.Component {
       </Panel>
     );
   }
+}
+
+BudgetDisplay.contextTypes = {
+  notify: PropTypes.func,
 }
 
 const mapStateToProps = (state, ownProps) => {
