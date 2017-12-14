@@ -2,7 +2,7 @@ import querystring from 'querystring';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Panel, Button } from 'react-bootstrap';
+import { Panel, Button, Row, Col } from 'react-bootstrap';
 import TextInput from './../generic/TextInput';
 import RadioControl from './../generic/RadioControl';
 import { makeApiGet } from '../../scripts/fetch';
@@ -55,7 +55,7 @@ class SubmitExpense extends React.Component {
       }}>
         <h4>Add an Expense</h4>
         <TextInput
-          title='Name'
+          title='Expense Name'
           type='text'
           placeholder='Name of expense'
           value={this.state.expenseName}
@@ -63,19 +63,26 @@ class SubmitExpense extends React.Component {
         />
         <br/>
         <TextInput
-          title='Amount'
+          title='Expense Amount'
           type='number'
           placeholder='$/Duration'
           value={this.state.expenseAmount}
           updateValue={this.handleExpenseAmount}
         />
         <br/>
-        <RadioControl
-          name='DurationToggleBudget'
-          value={this.state.duration}
-          onChange={this.handleDuration}
-          options={['daily', 'weekly', 'monthly', 'yearly']}
-        />
+        <Row>
+          <Col xs={3}>
+            <h4>Time Period:</h4>
+          </Col>
+          <Col xs={9}>
+            <RadioControl
+              name='DurationToggleBudget'
+              value={this.state.duration}
+              onChange={this.handleDuration}
+              options={['daily', 'weekly', 'monthly', 'yearly']}
+            />
+          </Col>
+        </Row>
         <hr/>
         <Button
           bsStyle='primary'

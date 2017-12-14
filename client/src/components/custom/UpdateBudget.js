@@ -1,7 +1,7 @@
 import querystring from 'querystring';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Panel, Button } from 'react-bootstrap';
+import { Panel, Button, Row, Col } from 'react-bootstrap';
 import TextInput from './../generic/TextInput';
 import RadioControl from './../generic/RadioControl';
 import { makeApiGet } from '../../scripts/fetch';
@@ -52,19 +52,26 @@ class UpdateBudget extends React.Component {
       }}>
         <h4>Set Your Budget</h4>
         <TextInput
-          title='Amount'
+          title='Budget Amount'
           type='number'
           placeholder='$/Duration'
           value={this.state.budgetAmount}
           updateValue={this.handleBudgetAmount}
         />
         <br/>
-        <RadioControl
-          name='DurationToggleBudget'
-          value={this.state.duration}
-          onChange={this.handleDuration}
-          options={['daily', 'weekly', 'monthly', 'yearly']}
-        />
+        <Row>
+          <Col xs={3}>
+            <h4>Time Period:</h4>
+          </Col>
+          <Col xs={9}>
+            <RadioControl
+              name='DurationToggleBudget'
+              value={this.state.duration}
+              onChange={this.handleDuration}
+              options={['daily', 'weekly', 'monthly', 'yearly']}
+            />
+          </Col>
+        </Row>
         <hr/>
         <Button
           bsStyle='primary'

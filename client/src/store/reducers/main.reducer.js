@@ -3,6 +3,7 @@ import extend from 'extend';
 // Set initial application state
 const initialState = {
   loggedIn: false,
+  theme: 'default',
 };
 
 // Handle actions dispatched to the reducer
@@ -15,6 +16,24 @@ const actionHandlers = {
     rs.loggedIn = true;
     return rs;
   },
+  SET_THEME: (returnState, action) => {
+    const rs = returnState;
+
+    const themeStyle = document.getElementById('bootswatchTheme');
+
+    if (themeStyle !== null) {
+      document.head.removeChild(themeStyle);
+    }
+
+    const newStyle = document.createElement('link');
+    newStyle.id = 'bootswatchTheme';
+    newStyle.rel = 'stylesheet';
+    newStyle.href = `./themes/bootstrap-${action.theme}.min.css`;
+    document.head.appendChild(newStyle);
+
+    rs.theme = action.theme;
+    return rs;
+  }
 };
 
 // Export the reducer

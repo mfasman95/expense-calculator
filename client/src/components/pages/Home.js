@@ -24,6 +24,7 @@ class Home extends React.Component {
           this.props.hasPremium &&
             <div>
               <Panel>
+                <h4>Time Period Display</h4>
                 <RadioControl
                   name='DurationToggle'
                   value={this.props.durationView}

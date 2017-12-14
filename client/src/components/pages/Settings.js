@@ -2,7 +2,7 @@ import querystring from 'querystring';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { PageHeader, Panel, Accordion, Button } from 'react-bootstrap';
+import { PageHeader, Panel, Accordion, Button, DropdownButton, MenuItem } from 'react-bootstrap';
 import TextInput from './../generic/TextInput';
 import { makeApiGet } from './../../scripts/fetch';
 
@@ -65,6 +65,25 @@ const ChangePasswordTab = (props) => (
   </Panel>
 );
 
+const themes = ['default', 'cerulean', 'cosmo', 'cyborg', 'darkly', 'flatly', 'journal', 'lumen', 'paper', 'readable', 'sandstone', 'simplex', 'slate', 'spacelab', 'superhero', 'united', 'yeti'];
+const ChangeThemeTab = (props) => (
+  <Panel 
+    collapsible
+    expanded={props.open}
+    header={<h4>Change Theme</h4>}
+    bsStyle='primary'
+    onClick={props.onClick}
+  >
+    <DropdownButton bsStyle='info' title={`Set Theme (${props.theme.charAt(0).toUpperCase()}${props.theme.slice(1)})`} id={'theme-dropdown'}>
+      {themes.map((theme, i) => (
+        <MenuItem eventKey={`${i}`} onClick={()=>props.handleTheme(theme)} key={i}>
+          {`${theme.charAt(0).toUpperCase()}${theme.slice(1)}`}
+        </MenuItem>
+      ))}
+    </DropdownButton>
+  </Panel>
+);
+
 class Settings extends React.Component {
   constructor(props) {
     super(props);
@@ -81,6 +100,7 @@ class Settings extends React.Component {
     this.handleNewPass1 = this.handleNewPass1.bind(this);
     this.handleNewPass2 = this.handleNewPass2.bind(this);
     this.submitNewPassword = this.submitNewPassword.bind(this);
+    this.handleTheme = this.handleTheme.bind(this);
   }
 
   handleSettingTabs(openTab) {
@@ -109,6 +129,10 @@ class Settings extends React.Component {
     this.setState({ oldPass: '', newPass1: '', newPass2: '' });
   }
 
+  handleTheme(theme) {
+    this.props.dispatch({ type: 'SET_THEME', theme })
+  }
+
   render() {
     return (
       <div>
@@ -125,6 +149,12 @@ class Settings extends React.Component {
             handleNewPass2={this.handleNewPass2}
             submitNewPassword={this.submitNewPassword}
           />
+          <ChangeThemeTab
+            open={this.state.openTab === 'changeTheme'}
+            onClick={()=>this.handleSettingTabs('changeTheme')}
+            theme={this.props.theme}
+            handleTheme={this.handleTheme}
+          />
         </Accordion>
       </div>
     );
@@ -135,4 +165,8 @@ Settings.contextTypes = {
   notify: PropTypes.func,
 }
 
-export default connect()(Settings);
+const mapStateToProps = (state, ownProps) => ({ 
+  theme: state.main.theme,
+})
+
+export default connect(mapStateToProps)(Settings);

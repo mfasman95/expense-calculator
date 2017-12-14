@@ -34,11 +34,9 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    page: state.route.page,
-  }
-}
+const mapStateToProps = (state, ownProps) => ({
+  page: state.route.page,
+})
 
 App.childContextTypes = {
   notify: PropTypes.func,
