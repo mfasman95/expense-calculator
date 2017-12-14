@@ -28,7 +28,7 @@ const Expense = connect()((props) => (
       </Button>
     </td>
     <td>{props.expense.name}</td>
-    <td>${props.expense[props.durationView].toFixed(2)}</td>
+    <td>${props.expense[props.durationView].toFixed(2)}/{props.durationView}</td>
   </tr>
 ));
 

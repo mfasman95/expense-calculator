@@ -44,15 +44,15 @@ class BudgetDisplay extends React.Component {
           <tbody>
             <tr>
               <td>Budget</td>
-              <td>${budget.toFixed(2)}/month</td>
+              <td>${budget.toFixed(2)}/{this.props.durationView}</td>
             </tr>
             <tr>
               <td>Expenses</td>
-              <td>${totalExpenses.toFixed(2)}/month</td>
+              <td>${totalExpenses.toFixed(2)}/{this.props.durationView}</td>
             </tr>
-            <tr className={(budget - totalExpenses >= 0) ? 'success' : 'danger'}>
+            <tr className={((budget - totalExpenses).toFixed(2) >= 0) ? 'success' : 'danger'}>
               <td>Remaining</td>
-              <td>${(budget - totalExpenses).toFixed(2)}/month</td>
+              <td>${(budget - totalExpenses).toFixed(2)}/{this.props.durationView}</td>
             </tr>
           </tbody>
         </Table>
